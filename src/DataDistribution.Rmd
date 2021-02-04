@@ -1,0 +1,126 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Importing required libraries
+```{r}
+
+  library(tidyverse)
+  library(readxl)
+
+```
+# Importing the data
+```{r}
+# The data downloaded from kaggle was in Excel format so the readxl 
+# library had to be used to import the data.
+
+    playerStatsLaLiga2019_2020 <- read_excel("La liga Player stats.xlsx")
+```
+# Questions
+
+## 1. Is the Age of soccer players in the first division of the Spanish league(La Liga) normally distributed?
+
+```{r}
+
+ggplot(data = playerStatsLaLiga2019_2020) + 
+  geom_histogram(aes(x = Age), binwidth=2, color="darkblue", fill="lightblue") + 
+  scale_x_continuous(breaks=c(0, 5, 10, 15, 20, 25, 30, 35,40)) +
+  geom_vline(aes(xintercept=mean(Age, na.rm = T)),
+            color="blue", linetype="dashed", size=1) + 
+  labs( title = "Distribution of soccer players ages", 
+        subtitle = "Players from La Liga season 2019-2020", 
+        caption = "data gathered from: kaggle.com") + 
+  ylab("Number of players")
+
+```
+
+```{r}
+# Display all the measurements of center plus standard deviation and range.
+  summary(playerStatsLaLiga2019_2020$Age)
+  message("Standard Deviation: ", sd(playerStatsLaLiga2019_2020$Age, na.rm =T))
+  message("Range: ", max(playerStatsLaLiga2019_2020$Age, na.rm =T) -
+            min(playerStatsLaLiga2019_2020$Age, na.rm =T))
+
+```
+
+## 2. Are goals scored evenly distributed among Foward players in the first division of the Spanish league?
+
+```{r}
+#First we need to get the forwards by themselves
+forwardPlayersOnly <- subset(playerStatsLaLiga2019_2020, Pos == "FW", Gls...11 > 0)
+
+
+ggplot(data = forwardPlayersOnly) + 
+  geom_histogram(aes(x = Gls...11), binwidth=3, color="darkblue", fill="cyan3")  +
+  geom_vline(aes(xintercept=mean(Gls...11, na.rm = T)),
+            color="blue", linetype="dashed", size=1) + 
+  labs( title = "Distribution of strikers goals", 
+        subtitle = "Strikers from La Liga season 2019-2020", 
+        caption = "data gathered from: kaggle.com") + 
+  ylab("Number of players") + xlab("Goals Scored")
+
+```
+
+```{r}
+# Display all the measurements of center plus standard deviation and range.
+
+  summary(forwardPlayersOnly$Gls...11)
+  message("Standard Deviation: ", sd(forwardPlayersOnly$Gls...11, na.rm =T))
+  message("Range: ", max(forwardPlayersOnly$Gls...11, na.rm =T) -
+            min(forwardPlayersOnly$Gls...11, na.rm =T))
+
+```
+
+## 3. Do all players play the same amount of games, meaning that the matches played per player is a normal distribution.
+
+```{r}
+
+ggplot(data = playerStatsLaLiga2019_2020) + 
+  geom_histogram(aes(x = MP), binwidth=2, color="black", fill="lightgreen")  +
+  geom_vline(aes(xintercept=mean(MP, na.rm = T)),
+            color="blue", linetype="dashed", size=1) + 
+  labs( title = "Distribution of matches played per player", 
+        subtitle = "Players from La Liga season 2019-2020", 
+        caption = "data gathered from: kaggle.com") + 
+  ylab("Number of players") + xlab("Matches Played")
+
+```
+
+```{r}
+# Display all the measurements of center plus standard deviation and range.
+
+  summary(playerStatsLaLiga2019_2020$MP)
+  message("Standard Deviation: ", sd(playerStatsLaLiga2019_2020$MP, na.rm =T))
+  message("Range: ", max(playerStatsLaLiga2019_2020$MP, na.rm =T) -
+            min(playerStatsLaLiga2019_2020$MP, na.rm =T))
+
+```
+
+## 4. Is there disparity in playing time among Barcelon's (The best soccer team in the world) soccer players?
+
+```{r}
+#Subsetting the Barcelona's soccer players
+bestTeamOnly <- subset(playerStatsLaLiga2019_2020, Squad == "Barcelona")
+
+ggplot(data = bestTeamOnly) + 
+  geom_histogram(aes(x = Min), binwidth=275 , color="darkorange3", fill="darkorange")  +
+  geom_vline(aes(xintercept=mean(Min, na.rm = T)),
+            color="blue", linetype="dashed", size=1) + 
+  labs( title = "Distribution of minutes played by Barcelona's players", 
+        subtitle = "Barcelona F.C. players from the season of 2019-2020", 
+        caption = "Barcelona F.C. is the best soccer team that ever existed") + 
+  ylab("Number of players") + xlab("Minutes Played")
+
+```
+
+```{r}
+# Display all the measurements of center plus standard deviation and range.
+
+  summary(bestTeamOnly$Min)
+  message("Standard Deviation: ", sd(bestTeamOnly$Min, na.rm =T))
+  message("Range: ", max(bestTeamOnly$Min, na.rm =T) -
+            min(bestTeamOnly$Min, na.rm =T))
+
+```
+
